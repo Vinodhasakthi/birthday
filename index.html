@@ -1,0 +1,208 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Happy Birthday Amma 💖</title>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+    }
+
+    /* Intro screen */
+    #intro {
+      position: fixed;
+      width: 100%;
+      height: 100vh;
+      background: black;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    #intro img {
+      max-height: 80vh;
+      filter: brightness(0.6) drop-shadow(0 0 10px #fff);
+    }
+
+    #startBtn {
+      margin-top: 30px;
+      padding: 15px 30px;
+      font-size: 20px;
+      background-color: #ff4d6d;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 0 15px #ffb3c6;
+      transition: transform 0.2s ease;
+    }
+
+    #startBtn:hover {
+      transform: scale(1.1);
+    }
+
+    /* Slideshow section */
+    #slideshow-section {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: linear-gradient(to bottom right, #ffd6e0, #ffe6cc);
+    }
+
+    .slide-img {
+      position: absolute;
+      max-width: 90%;
+      max-height: 90%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.3);
+    }
+
+    .slide-img.active {
+      opacity: 1;
+    }
+
+    /* Sparkle animation */
+    .sparkle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: white;
+      border-radius: 50%;
+      animation: sparkle 4s infinite;
+      opacity: 0.6;
+      z-index: 0;
+    }
+
+    @keyframes sparkle {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh) scale(0.5);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- 🔊 Voice greeting -->
+<audio id="introVoice">
+  <source src="hi-amma.mp3" type="audio/mp3">
+</audio>
+
+<!-- 🎵 Emotional song -->
+<div id="slideshow-section">
+  <audio id="bgAudio" autoplay loop>
+    <source src="your-song.mp3" type="audio/mp3">
+  </audio>
+  <div id="slideshow"></div>
+</div>
+
+<!-- 🌄 Intro with shadow image and heart button -->
+<div id="intro">
+  <img src="shadow-image.png" alt="Your Shadow Image">
+  <button id="startBtn">Click My Heart ❤️</button>
+</div>
+
+<!-- ✨ Sparkle effect -->
+<script>
+  for (let i = 0; i < 50; i++) {
+    const sparkle = document.createElement('div');
+    sparkle.className = 'sparkle';
+    sparkle.style.left = `${Math.random() * 100}%`;
+    sparkle.style.top = `${Math.random() * 100}%`;
+    sparkle.style.animationDelay = `${Math.random() * 4}s`;
+    sparkle.style.animationDuration = `${2 + Math.random() * 3}s`;
+    document.body.appendChild(sparkle);
+  }
+</script>
+
+<!-- 📸 Slideshow logic -->
+<script>
+    const totalImages = 103;
+    let currentIndex = 0;
+
+    const slideshow = document.getElementById("slideshow");
+    const audio = document.getElementById("bgAudio");
+
+    const images = [];
+
+    for (let i = 1; i <= totalImages; i++) {
+      const img = document.createElement("img");
+      img.src = `images/img${i}.jpg`; // Make sure .jpg matches your files
+      img.className = "slide-img";
+      if (i === 1) img.classList.add("active");
+      slideshow.appendChild(img);
+      images.push(img);
+    }
+
+    const showNextImage = () => {
+      if (currentIndex < images.length - 1) {
+        images[currentIndex].classList.remove("active");
+        currentIndex++;
+        images[currentIndex].classList.add("active");
+      } else {
+        clearInterval(slideTimer);
+        alert("Amma, I love you! 💖 Hope you enjoyed this memory ride 🥹");
+      }
+    };
+
+    const slideTimer = setInterval(showNextImage, 2480); // 2.48 seconds per image
+ // 1 second per image
+
+    // Optional: Start audio on first click if autoplay fails due to browser rules
+    document.body.addEventListener("click", () => {
+      if (audio.paused) {
+        audio.play();
+      }
+    });
+  </script>
+
+
+<!-- 🧡 Button click logic -->
+<script>
+  document.getElementById("startBtn").addEventListener("click", function () {
+    const voiceAudio = document.getElementById("introVoice");
+    const bgAudio = document.getElementById("bgAudio");
+
+    voiceAudio.play();
+
+    // When the voice message ends...
+    voiceAudio.onended = function () {
+      document.getElementById("intro").style.display = 'none';
+      document.getElementById("slideshow-section").style.display = 'block';
+      
+      // Start background song
+      if (bgAudio) {
+        bgAudio.play().catch(e => {
+          console.log("Autoplay blocked:", e);
+        });
+      }
+    };
+  });
+</script>
+
+   
+
+
+
+</body>
+</html>
